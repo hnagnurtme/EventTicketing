@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BuberDinner.Domain\BuberDinner.Domain.csproj" />
+    <ProjectReference Include="..\EventTicketing.Domain\EventTicketing.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
