@@ -1,0 +1,90 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Build artifacts
+**/bin/
+**/obj/
+**/out/
+**/publish/
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# IDE files
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Temporary folders
+tmp/
+temp/
+
+# Test files
+**/tests/
+**/*Test*/
+**/*test*/
+
+# Package files
+*.nupkg
+*.snupkg
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache
+.cache/
+
+# Editor directories and files
+.idea/
+*.swp
+*.swo
+
+# Docker files (to avoid recursive copying)
+Dockerfile*
+docker-compose*
+.dockerignore
