@@ -2,22 +2,32 @@ using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using EventTicketing.Contracts.Authentication;
+using EventTicketing.Application.Services.Authentication.Commands.Register;
+using EventTicketing.Application.Services.Authentication.Common;
+
+using MapsterMapper;
+
+
 namespace EventTicketing.API.Controllers;
 
 [ApiController]
 [Route("api/auth")]
 public class AuthController : BaseController
 {
-    [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
+    private readonly ISender _mediator;
+    private readonly IMapper _mapper;
+
+    public AuthController(ISender mediator, IMapper mapper)
     {
-        return Ok("Login endpoint is working!");
+        _mediator = mediator;
+        _mapper = mapper;
     }
 
-
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterRequest request)
+    public async Task<IActionResult> Register(RegisterRequest request)
     {
-        return Ok("Register endpoint is working!");
+        var command = _mapper.Map<RegisterCommand>(request);
+        ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command);
+        return HandleResult(authResult);
     }
 }
