@@ -6,14 +6,8 @@ using AutoMapper;
 namespace EventTicketing.API.Controllers;
 
 [ApiController]
-public class BaseController : ControllerBase
+public abstract class BaseController : ControllerBase
 {
-    private ISender _mediator;
-    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
-    
-    private readonly IMapper _mapper;
-    protected IMapper Mapper => _mapper;
-    
 
     protected IActionResult HandleResult<T>(ErrorOr<T> result)
     {
@@ -24,7 +18,7 @@ public class BaseController : ControllerBase
 
         return Ok(result.Value);
     }
-    
+
     protected IActionResult Problem(List<Error> errors)
     {
         if (errors.All(e => e.Type == ErrorType.Validation))
@@ -54,14 +48,11 @@ public class BaseController : ControllerBase
             _ => StatusCodes.Status500InternalServerError
         };
 
-        var genericProblemDetails = new ProblemDetails
+        return StatusCode(statusCode, new ProblemDetails
         {
             Title = firstError.Description,
             Status = statusCode,
             Detail = firstError.Description
-        };
-
-        return StatusCode(statusCode, genericProblemDetails);
+        });
     }
-
 }
