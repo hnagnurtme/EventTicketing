@@ -1,6 +1,5 @@
 using EventTicketing.Domain.Entities;
-
-namespace EventTicketing.Application.Services.Authentication.Commands.Register;
+namespace EventTicketing.Application.Common.Interface.Persistence;
 
 public interface IUserRepository
 {

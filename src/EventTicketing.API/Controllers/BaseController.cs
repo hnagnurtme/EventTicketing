@@ -1,43 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
-using MediatR;
+using EventTicketing.API.Common;
+using EventTicketing.Application.Common.Models;
 using ErrorOr;
-using AutoMapper;
 
 namespace EventTicketing.API.Controllers;
 
 [ApiController]
 public abstract class BaseController : ControllerBase
 {
-
-    protected IActionResult HandleResult<T>(ErrorOr<T> result)
+    protected IActionResult HandleResult<T>(ErrorOr<T> result, string? successMessage = null)
     {
         if (result.IsError)
         {
-            return Problem(result.Errors);
+            return HandleError<T>(result.Errors);
         }
 
-        return Ok(result.Value);
+        var value = result.Value;
+
+        if (value == null)
+            return NoContent();
+
+        return Ok(ApiResponse<T>.Ok(value, successMessage));
     }
 
-    protected IActionResult Problem(List<Error> errors)
+    private IActionResult HandleError<T>(List<Error> errors)
     {
-        if (errors.All(e => e.Type == ErrorType.Validation))
-        {
-            var problemDetails = new ValidationProblemDetails
-            {
-                Title = "One or more validation errors occurred.",
-                Status = StatusCodes.Status400BadRequest,
-                Detail = "See the errors property for details.",
-            };
-
-            foreach (var error in errors)
-            {
-                problemDetails.Errors.Add(error.Code, new[] { error.Description });
-            }
-
-            return BadRequest(problemDetails);
-        }
-
         var firstError = errors[0];
 
         var statusCode = firstError.Type switch
@@ -48,11 +35,34 @@ public abstract class BaseController : ControllerBase
             _ => StatusCodes.Status500InternalServerError
         };
 
-        return StatusCode(statusCode, new ProblemDetails
+        var response = new ApiResponse<T>
         {
-            Title = firstError.Description,
-            Status = statusCode,
-            Detail = firstError.Description
-        });
+            Success = false,
+            Message = firstError.Description,
+            StatusCode = statusCode,
+            Data = default
+        };
+
+        return StatusCode(statusCode, response);
+    }
+
+    protected IActionResult HandlePagedResult<T>(ErrorOr<PagedResult<T>> result, string? successMessage = null)
+    {
+        if (result.IsError)
+            return HandleError<PagedResult<T>>(result.Errors);
+
+        var paged = result.Value;
+        if (paged == null || paged.Items == null || !paged.Items.Any())
+            return NoContent();
+
+        var meta = new
+        {
+            paged.PageNumber,
+            paged.PageSize,
+            paged.TotalItems,
+            paged.TotalPages
+        };
+
+        return Ok(ApiResponse<PagedResult<T>>.Ok(paged, successMessage, meta));
     }
 }

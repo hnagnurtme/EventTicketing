@@ -25,7 +25,6 @@
 
 
    <ItemGroup>
-    <ProjectReference Include="..\EventTicketing.Contracts\EventTicketing.Contracts.csproj" />
     <ProjectReference Include="..\EventTicketing.Application\EventTicketing.Application.csproj" />
     <ProjectReference Include="..\EventTicketing.Infrastructure\EventTicketing.Infrastructure.csproj" />
   </ItemGroup>

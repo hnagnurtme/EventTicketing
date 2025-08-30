@@ -1,11 +1,10 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using EventTicketing.Domain.Entities;
-using EventTicketing.Application.Services.Authentication.Commands.Register;
-using EventTicketing.Application.Services.Authentication.Common;
+using EventTicketing.Application.Common.Interface.Authentication;
+
 using ErrorOr;
 using MediatR;
+using EventTicketing.Application.Common.Interface.Persistence;
+using EventTicketing.Application.DTOs.Authentication;
 
 namespace EventTicketing.Application.Services.Authentication.Commands.Register;
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
@@ -21,16 +20,16 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
     }
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
+        await Task.CompletedTask;
         /*
             1. Check if the user already exists
             2. Hash the password
             3. Save the user to the database
             4. Generate a JWT token
             5. Return the AuthenciationResult with user details and token
-        */ 
+        */
         if (_userRepository.GetUserByEmail(command.Email) != null)
         {
-            // Trả về lỗi duplicate email, bạn cần định nghĩa ErrorOr cho lỗi này
             return Error.Failure("DuplicateEmail", "Email already exists");
         }
 
@@ -51,6 +50,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             user.LastName
         );
 
-        return new AuthenticationResult(user, token);
+        return new AuthenticationResult(
+            user,
+            token
+        );
     }
 }

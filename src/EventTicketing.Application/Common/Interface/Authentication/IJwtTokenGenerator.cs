@@ -1,4 +1,4 @@
-namespace EventTicketing.Application.Services.Authentication.Commands.Register;
+namespace EventTicketing.Application.Common.Interface.Authentication;
 
 public interface IJwtTokenGenerator
 {
