@@ -1,9 +1,8 @@
-using EventTicketing.Application.Services.Authentication.Common;
-using EventTicketing.Contracts.Authentication;
+using EventTicketing.Application.DTOs.Authentication;
 using Mapster;
 
 
-namespace BuberDinner.Api.Common.Mapping;
+namespace EventTicketing.API.Common.Mapping;
 
 public class AuthenticationMappingConfig : IRegister
 {

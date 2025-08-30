@@ -1,8 +1,10 @@
-using EventTicketing.Application.Services.Authentication.Commands.Register;
-using EventTicketing.Application.Services.Authentication.Common;
+
+using EventTicketing.Application.DTOs.Authentication;
 using EventTicketing.Domain.Entities;
 using ErrorOr;
 using MediatR;
+using EventTicketing.Application.Common.Interface.Authentication;
+using EventTicketing.Application.Common.Interface.Persistence;
 
 namespace EventTicketing.Application.Services.Authentication.Queiries.Login;
 
@@ -43,7 +45,8 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
             user.LastName
         );
         return new AuthenticationResult(
-            user,token
+            user,
+            token
         );
     }
 }

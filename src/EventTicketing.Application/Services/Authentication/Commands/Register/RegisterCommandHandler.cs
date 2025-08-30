@@ -1,8 +1,10 @@
 using EventTicketing.Domain.Entities;
-using EventTicketing.Application.Services.Authentication.Commands.Register;
-using EventTicketing.Application.Services.Authentication.Common;
+using EventTicketing.Application.Common.Interface.Authentication;
+
 using ErrorOr;
 using MediatR;
+using EventTicketing.Application.Common.Interface.Persistence;
+using EventTicketing.Application.DTOs.Authentication;
 
 namespace EventTicketing.Application.Services.Authentication.Commands.Register;
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
@@ -28,7 +30,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
         */
         if (_userRepository.GetUserByEmail(command.Email) != null)
         {
-            // Trả về lỗi duplicate email, bạn cần định nghĩa ErrorOr cho lỗi này
             return Error.Failure("DuplicateEmail", "Email already exists");
         }
 
@@ -49,6 +50,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             user.LastName
         );
 
-        return new AuthenticationResult(user, token);
+        return new AuthenticationResult(
+            user,
+            token
+        );
     }
 }

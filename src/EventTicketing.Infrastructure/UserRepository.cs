@@ -2,6 +2,7 @@ using EventTicketing.Application.Services.Authentication.Commands.Register;
 
 namespace EventTicketing.Infrastructure;
 
+using EventTicketing.Application.Common.Interface.Persistence;
 using EventTicketing.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,9 @@ public class UserRepository : IUserRepository
 
     public User? GetUserByEmail(string email)
     {
-        return _users.FirstOrDefault(u => u.Email == email);
+        return new User();
     }
+
 
     public void AddUser(User user)
     {

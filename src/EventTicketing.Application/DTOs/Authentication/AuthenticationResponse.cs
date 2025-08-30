@@ -1,4 +1,5 @@
-namespace EventTicketing.Contracts.Authentication;
+namespace EventTicketing.Application.DTOs.Authentication;
+
 public record AuthenticationResponse(
     Guid UserId,
     string FirstName,
