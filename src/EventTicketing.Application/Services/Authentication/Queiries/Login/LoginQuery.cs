@@ -1,4 +1,4 @@
-using EventTicketing.Application.Services.Authentication.Common;
+using EventTicketing.Application.DTOs.Authentication;
 using ErrorOr;
 using MediatR;
 

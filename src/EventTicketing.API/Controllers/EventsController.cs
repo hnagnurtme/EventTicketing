@@ -4,7 +4,7 @@ namespace EventTicketing.API.Controllers;
 
 [ApiController]
 [Route("api/events")]
-public class EventController : BaseController
+public class EventController : ControllerBase
 {
     [HttpGet]
     public IActionResult Get()

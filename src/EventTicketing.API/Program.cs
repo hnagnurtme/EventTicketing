@@ -1,4 +1,4 @@
-using EventTicketing.API.Extensions;
+using EventTicketing.API;
 using EventTicketing.Infrastructure;
 using EventTicketing.Application;
 using EventTicketing.API.Configurations;

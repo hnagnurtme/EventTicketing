@@ -1,9 +1,10 @@
 using EventTicketing.Domain.Entities;
 using EventTicketing.Application.Common.Interface.Authentication;
-using EventTicketing.Application.Services.Authentication.Common;
+
 using ErrorOr;
 using MediatR;
 using EventTicketing.Application.Common.Interface.Persistence;
+using EventTicketing.Application.DTOs.Authentication;
 
 namespace EventTicketing.Application.Services.Authentication.Commands.Register;
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
@@ -49,6 +50,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             user.LastName
         );
 
-        return new AuthenticationResult(user, token);
+        return new AuthenticationResult(
+            user,
+            token
+        );
     }
 }

@@ -23,37 +23,36 @@ public static class DependencyInjection
         return services;
     }
 
-
-public static IServiceCollection AddAuthenticationInfrastructure(this IServiceCollection services, IConfiguration configuration)
-{
-    // Bind strongly typed settings
-    var jwtSettings = configuration.GetSection("Jwt").Get<JWTSettings>();
-    if (string.IsNullOrEmpty(jwtSettings.SecretKey))
-        throw new InvalidOperationException("JWT Key is not configured.");
-
-    services.AddSingleton(jwtSettings); // inject trực tiếp nếu muốn
-    services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-
-    services.AddAuthentication(options =>
+    public static IServiceCollection AddAuthenticationInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
+        // Bind strongly typed settings
+        var jwtSettings = configuration.GetSection("Jwt").Get<JWTSettings>();
+        if (jwtSettings == null || string.IsNullOrEmpty(jwtSettings.SecretKey))
+            throw new InvalidOperationException("JWT settings or JWT Key is not configured.");
+
+        services.AddSingleton(jwtSettings); // inject trực tiếp nếu muốn
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        services.AddAuthentication(options =>
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings.Issuer,
-            ValidAudience = jwtSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
-        };
-    });
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtSettings.Issuer,
+                ValidAudience = jwtSettings.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
+            };
+        });
 
-    return services;
-}
+        return services;
+    }
 
 }
