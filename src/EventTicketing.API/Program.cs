@@ -1,15 +1,17 @@
 using EventTicketing.API.Extensions;
 using EventTicketing.Infrastructure;
 using EventTicketing.Application;
+using EventTicketing.API.Configurations;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// --- Services ---
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services
-    .AddApplication()                          
-    .AddPresentation()                        
+    .AddApplication()
+    .AddPresentation()
     .AddSwaggerDocumentation()
     .AddJwtAuthentication(builder.Configuration)
     .AddCorsPolicy();
@@ -17,7 +19,17 @@ builder.Services
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
+// --- Serilog ---
+builder.Logging.ClearProviders(); 
+
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services);
+});
 var app = builder.Build();
+
 
 app.ConfigureEventTicketingPipeline(builder.Environment);
 

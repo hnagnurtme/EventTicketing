@@ -6,6 +6,7 @@ using EventTicketing.Application.Services.Authentication.Commands.Register;
 using EventTicketing.Application.Services.Authentication.Common;
 
 using MapsterMapper;
+using EventTicketing.API.Middlewares;
 
 
 namespace EventTicketing.API.Controllers;
@@ -29,5 +30,13 @@ public class AuthController : BaseController
         var command = _mapper.Map<RegisterCommand>(request);
         ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command);
         return HandleResult(authResult);
+    }
+
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        await Task.Delay(0);
+        return Ok();
     }
 }

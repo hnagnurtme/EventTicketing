@@ -1,5 +1,5 @@
 using BuberDinner.Api.Common.Mapping;
-
+using EventTicketing.API.Configurations;
 
 namespace EventTicketing.API.Extensions;
 

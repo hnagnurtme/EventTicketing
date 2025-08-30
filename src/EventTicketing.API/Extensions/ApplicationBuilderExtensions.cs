@@ -1,36 +1,42 @@
+using EventTicketing.API.Middlewares;
+using Serilog;
+
+
+
 namespace EventTicketing.API.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Ticketing API V1");
-                c.RoutePrefix = string.Empty;
-            });
-
-            return app;
-        }
-
-        public static IApplicationBuilder UseApiExceptionHandling(this IApplicationBuilder app)
-        {
-            app.UseExceptionHandler("/error");
-
-            return app;
-        }
-
         public static IApplicationBuilder ConfigureEventTicketingPipeline(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseErrorHandling();
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.GetLevel = (httpContext, elapsed, ex) =>
+                {
+                    if (ex != null)
+                    {
+                        return Serilog.Events.LogEventLevel.Error;
+                    }
+
+                    if (httpContext.Response.StatusCode >= 500)
+                    {
+
+                        return Serilog.Events.LogEventLevel.Warning;
+                    }
+
+                    return Serilog.Events.LogEventLevel.Information;
+                };
+            });
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwaggerDocumentation(env);
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
-                app.UseApiExceptionHandling();
                 app.UseHsts();
             }
 
@@ -42,6 +48,11 @@ namespace EventTicketing.API.Extensions
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/", context =>
+                {
+                    context.Response.Redirect("/swagger");
+                    return Task.CompletedTask;
+                });
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
