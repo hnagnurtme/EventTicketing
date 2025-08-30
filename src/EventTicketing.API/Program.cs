@@ -13,7 +13,7 @@ builder.Services
     .AddApplication()
     .AddPresentation()
     .AddSwaggerDocumentation()
-    .AddJwtAuthentication(builder.Configuration)
+    .AddAuthenticationInfrastructure(builder.Configuration)
     .AddCorsPolicy();
 
 builder.Services.AddControllers();

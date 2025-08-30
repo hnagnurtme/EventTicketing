@@ -1,8 +1,10 @@
-using EventTicketing.Application.Services.Authentication.Commands.Register;
+
 using EventTicketing.Application.Services.Authentication.Common;
 using EventTicketing.Domain.Entities;
 using ErrorOr;
 using MediatR;
+using EventTicketing.Application.Common.Interface.Authentication;
+using EventTicketing.Application.Common.Interface.Persistence;
 
 namespace EventTicketing.Application.Services.Authentication.Queiries.Login;
 
